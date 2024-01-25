@@ -1,18 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useFetch } from '../hooks/useFetch'
 
 function ProductList() {
-  const [products, setProducts] = useState([])
+  // const [products, setProducts] = useState([])
   const [url, setUrl] = useState('http://localhost:8000/products/')
 
-  const fetchProducts = useCallback(async () => {
-    const response = await fetch(url)
-    const data = await response.json()
-    setProducts(data)
-  }, [url])
+  const { data: products } = useFetch(url)
 
-  useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+  // const fetchProducts = useCallback(async () => {
+  //   const response = await fetch(url)
+  //   const data = await response.json()
+  //   setProducts(data)
+  // }, [url])
+
+  // useEffect(() => {
+  //   fetchProducts()
+  // }, [fetchProducts])
 
   // console.log(products)
   return (
@@ -27,18 +30,19 @@ function ProductList() {
           instock
         </button>
       </div>
-      {products.map((product) => (
-        <div className='card' key={product.id}>
-          <p className='id'>{product.id}</p>
-          <p className='name'> {product.name}</p>
-          <p className='info'>
-            <span>${product.price}</span>
-            <span className={product.in_stock ? 'instock' : 'unavailable'}>
-              {product.in_stock ? 'in stock' : 'unavailable'}
-            </span>
-          </p>
-        </div>
-      ))}
+      {products &&
+        products.map((product) => (
+          <div className='card' key={product.id}>
+            <p className='id'>{product.id}</p>
+            <p className='name'> {product.name}</p>
+            <p className='info'>
+              <span>${product.price}</span>
+              <span className={product.in_stock ? 'instock' : 'unavailable'}>
+                {product.in_stock ? 'in stock' : 'unavailable'}
+              </span>
+            </p>
+          </div>
+        ))}
     </section>
   )
 }
